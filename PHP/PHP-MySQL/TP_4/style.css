@@ -1,0 +1,15 @@
+label{
+    width: 200px;
+    display: block;
+    float: left;
+}
+form {
+    margin: auto;
+    width: 500px;
+}
+.button {
+    margin: 10px;
+}
+h3{
+    text-align: center;
+}
