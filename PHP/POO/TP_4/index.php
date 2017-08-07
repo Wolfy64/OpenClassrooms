@@ -38,7 +38,7 @@ switch ($action) {
         require_once('Controler/newsList.php');
         break;
 
-    case ("news"):
+    case 'news':
         require_once('Controler/news.php');
         break;
 
