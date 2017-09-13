@@ -5,9 +5,15 @@ use \OCFram\Cache;
 
 class CacheNews extends Cache
 {
+    /**
+     * Set the attribute $name
+     *  => News{$name}_{date}
+     * @param string $name
+     * @return Void
+     */
     public function setName($name)
     {
-        $this->name = 'News'.$name->id().'_'.date('d-M-Y');
+        $this->name = 'News'.$name.'_'.date('d-M-Y');
     }
 
     /**
@@ -22,5 +28,4 @@ class CacheNews extends Cache
             throw new Exception($path." n'est pas une chaine de charactere");
         }
     }
-
 }

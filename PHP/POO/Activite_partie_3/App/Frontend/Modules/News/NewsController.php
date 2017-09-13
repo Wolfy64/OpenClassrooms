@@ -41,19 +41,22 @@ class NewsController extends BackController
   
   public function executeShow(HTTPRequest $request)
   {
-    
-    $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
 
-    $cacheNews = new CacheNews($news);
-
-    if ( empty($news) ){
-       $this->app->httpResponse()->redirect404();
-    }
+    $cacheNews = new CacheNews();
+    $cacheNews->setName( $request->getData('id') );
 
     if ( $cacheNews->cacheValid() ){ // If TRUE
       $news = $cacheNews->read();
+
     } else {
+      $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
+      $cacheNews->setName( $news->id() );
+      $cacheNews->setContents( $news );
       $cacheNews->write();
+    }  
+
+    if ( empty($news) ){
+       $this->app->httpResponse()->redirect404();
     }
 
     $this->page->addVar('title', $news->titre());

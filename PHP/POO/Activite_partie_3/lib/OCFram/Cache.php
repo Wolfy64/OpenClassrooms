@@ -28,13 +28,11 @@ abstract class Cache
      */
     protected $time;
 
-    public function __construct($news)
+    public function __construct()
     {
-        $this->setContents($news);
         $this->setTime();
-        $this->setName($news);
         $this->setPath();
-        $this->cacheValid();
+        // $this->cacheValid();
     }
 
     // GETTERS \\
@@ -90,7 +88,7 @@ abstract class Cache
      * @param integer $time
      * @return Void
      */
-    public function setTime($time=5)
+    public function setTime($time=60)
     {
         if (is_int($time)){
             $this->time = $time;
@@ -144,13 +142,4 @@ abstract class Cache
     {
         return unserialize( \file_get_contents($this->path.$this->name.'.xml', false, null, 11) );
     }
-
-    /**
-     * To unserialize the attribute $content
-     * @return void
-     */
-    // public function unserializeContents()
-    // {
-    //     unserialize($this->contents);
-    // }
 }
