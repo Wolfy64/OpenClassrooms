@@ -1,5 +1,6 @@
 <?php
 namespace OCFram;
+
 /**
  * To put in cache Data and View
  *
@@ -10,12 +11,10 @@ abstract class Cache
 {
     /**
      * @var Object of news contents
-     *
      */
     protected $contents;
     /**
      * @var string name of file cache
-     *
      */
     protected $name;
     /**
@@ -29,16 +28,57 @@ abstract class Cache
      */
     protected $time;
 
-    public function __construct($time)
+    public function __construct($news)
     {
-        $this->setTime($time);
+        $this->setContents($news);
+        $this->setTime();
+        $this->setName($news);
+        $this->setPath();
+        $this->cacheValid();
     }
+
+    // GETTERS \\
+
+    /**
+     * @return object $content 
+     */
+    public function getContents() { return $this->contents; }
+
+    /**
+     * @return string $name
+     */
+    public function getName() { return $this->name; }
+
+    /**
+     * @return string $path
+     */
+    public function getPath() { return $this->path; }
+
+    /**
+     * @return integer $time
+     */
+    public function getTime() { return $this->time; }
 
     // SETTERS \\
 
     /**
-     * @param object $contents set and serialize the attribute contents
-     *
+     * Set the attribute $name
+     * @param string $name
+     * @return Void
+     */
+    abstract public function setName($name);
+
+    /**
+     * Set the attribute $path
+     * @param string $path
+     * @return Void
+     */
+    abstract public function setPath($path);
+
+    /**
+     * Set and serialize the attribute contents
+     * @param object $contents
+     * @return Void
      */
     public function setContents($contents)
     {
@@ -46,97 +86,49 @@ abstract class Cache
     }
 
     /**
-     * @param string $name set the attribute $name
-     *
+     * Set the attribute $time
+     * @param integer $time
+     * @return Void
      */
-    abstract public function setName($name);
-
-    /**
-     * @param string $path set the attribute $path
-     *
-     */
-    abstract public function setPath($path);
-
-    /**
-     * @param integer $time set the attribute $path
-     *
-     */
-    public function setTime($time)
+    public function setTime($time=5)
     {
         if (is_int($time)){
             $this->time = $time;
         }else{
-            throw new Exception($time." n'est pas un entier");
+            throw new \Exception($time." must be an integer");
         }
     }
 
-    // GETTERS \\
+    // METHODS \\
 
     /**
-     * @return object attribute $content 
-     *
+     * To check if a cached file exists and date is valid
+     * @return bool
      */
-    public function getContents()
+    public function cacheValid()
     {
-        return $this->contents;
-    }
-
-    /**
-     * @return string attribute $name
-     *
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string attribute path
-     *
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @return integer attribute $time
-     *
-     */
-    public function getTime()
-    {
-        return $this->time;
-    }
-
-    // METHOD \\
-
-    /**
-     * @return bool check if an cached file exists
-     * 
-     */
-    public function cacheExists()
-    {
+        // If files exists And is not expired
         if (file_exists($this->path.$this->name.'.xml') && $this->isExpired() !== true){
-            $this->read();
             return true;
         }else {
-            $this->write();
             return false;
         }
     }
 
     /**
-     * @return bool True if the expiry time of the cache files is expired and false if still validate
-     *
+     * Return TRUE if the expiry time of the cache files is expired
+     * Return FALSE if still validate
+     * @return bool
      */
-    public function isExpired()
+    private function isExpired()
     {
         return \time() > file_get_contents( $this->path.$this->name.'.xml', false, null, 0, 11 );
     }
 
     /**
-     * @return void create and fill up a cache binary file (can't be read by an IDE !)
-     * 
+     *  Create and fill up a binary cache file 
+     *  Sometimes IDE can't be read binary files ! But it's work
+     * @return void
      */
     public function write()
     {
@@ -145,29 +137,20 @@ abstract class Cache
     }
 
     /**
-     * @return void read and unserialize cache file
-     *
+     * To read and unserialize cache file
+     * @return Object
      */
     public function read()
     {
-        echo 'le cache existe';
         return unserialize( \file_get_contents($this->path.$this->name.'.xml', false, null, 11) );
     }
 
     /**
-     * @return void unserialize the attribute $content
-     *
+     * To unserialize the attribute $content
+     * @return void
      */
-    public function unserializeContents()
-    {
-        return unserialize($this->contents);
-    }
-
-    public function test()
-    {
-        $file = 'jhkdbfjbvhcjkhdsvhbdskchbs';
-        $filePack = pack($file);
-        
-    }
-
+    // public function unserializeContents()
+    // {
+    //     unserialize($this->contents);
+    // }
 }

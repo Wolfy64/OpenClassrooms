@@ -27,8 +27,8 @@ class Page extends ApplicationComponent
 
     extract($this->vars);
 
-    $cache = new \App\Frontend\Modules\News\CacheNews;
-    $cache->setContents($this->contentFile);
+    // $cache = new \App\Frontend\Modules\News\CacheNews;
+    // $cache->setContents($this->contentFile);
 
     ob_start();
       require $this->contentFile;
